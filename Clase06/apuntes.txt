@@ -1,0 +1,14 @@
+definir una constante 
+
+#define "nombre de varible" "valor"
+SI O SI EN MAYUS
+#define CAMBIOS 2
+
+
+pre incremento tope++ es igual a ++tope
+
+temario:
+generar numeros al azar
+
+la inteligencia artificial
+

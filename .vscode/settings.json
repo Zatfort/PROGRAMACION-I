@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "string.h": "c",
+        "vector": "c",
+        "PAR O INPAR.C": "cpp",
+        "PAR.C": "cpp"
+    }
+}

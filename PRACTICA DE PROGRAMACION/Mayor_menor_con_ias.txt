@@ -1,0 +1,198 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define CAMBIOS 1000
+#define CANT_PARTIDOS 1000000
+
+int verificar(ant,sig,opcion)
+{
+    int res=0; //por defecto es falso
+    switch(opcion)
+    {
+    case -1:
+        //cuando el sig es menor que el anterior
+        if(sig<ant) res=1;
+        break;
+    case 0:
+        //cuando son iguales
+        if(sig==ant) res=1;
+        break;
+    case 1:
+        //cuando el sig es mayor que el anterior
+        if(sig>ant) res=1;
+        break;
+    }
+    return res;
+
+}
+
+
+void verMazo(int mazo[40])
+{
+    for(int i=0; i<40; i++)
+    {
+        if(i%10==0)printf("\n");
+        printf("%d ",mazo[i]);
+
+    }
+}
+
+void crearMazo(int mazo[40])
+{
+    int cont=1;
+    for(int num=0; num<40; num++)
+    {
+        mazo[num]=cont;
+        if(cont==10) cont=0;
+        cont++;
+    }
+}
+
+void mezclarMazo(int mazo[40])
+{
+    int pos1,pos2,aux;
+    for(int i=0; i<CAMBIOS; i++)
+    {
+        //generar dos posiciones al azar
+        pos1=rand()%40;
+        pos2=rand()%40;
+        //intercambiarlas
+        aux=mazo[pos1];
+        mazo[pos1]=mazo[pos2];
+        mazo[pos2]=aux;
+    }
+}
+
+int ia0(int cartaAnterior)
+{
+    //selecciona al azar -1 si la sig es menor
+    //0 si cree que la sig es igual //o 1 si la sig es mayor.
+    int opcion=(rand()%3)-1;
+    //printf("opcion = %d",opcion);
+    return opcion;
+}
+
+int ia1(int cartaAnterior)
+{
+    int opcion;
+    if(cartaAnterior==1)
+    {
+        int opcion=rand()%2; // 0 1
+    }
+    else if(cartaAnterior==10)
+    {
+        opcion=(rand()%2)-1; // -1 0
+    }
+    else opcion=(rand()%3)-1; //-1 0  1
+    return opcion;
+}
+
+int ia3(int ca)
+{
+    int r;
+    if(ca>=6)
+    {
+        r = -1;
+    }
+    if(ca<=5)
+    {
+        r = +1;
+    }
+    //printf("%d",r);
+    return r;
+}
+
+int ia4(int mazo[40],int tope){
+    int contadores[11]={4}; //el contador 0 no lo uso, para que la carta = indice
+    //contar cartas
+    for(int i=0;i<=tope;i++){
+          contadores[mazo[i]]--;
+    }
+    int menores=0,mayores=0,iguales=0,ultima;
+    ultima=mazo[tope];
+    //acumular desde 1 hasta ultima
+    for(int pos=1;pos<ultima;pos++)
+        menores=menores+contadores[pos];
+    //acumular desde ultima+1 hasta 10
+    for(int pos=ultima+1;pos<11;pos++)
+        mayores=mayores+contadores[pos];
+    //determinar cuantas cartas quedan iguales a la ultima
+    iguales=contadores[ultima];
+
+    if(menores>mayores && menores > iguales)return -1;
+    if(mayores>menores && mayores > iguales)return 1;
+    return 0;
+}
+
+int humano(int cartaAnterior)
+{
+    int opcion;
+    printf("La carta anterior fue un %d\n",cartaAnterior);
+    printf("Como sera la siguiente? [-1,0,1]\n");
+    scanf("%d",&opcion);
+    while(opcion<-1 || opcion >1)
+    {
+        printf("ERROR. La carta anterior fue un %d\nComo será la siguiente \nmenor -1\nigual 0\nmayor 1:");
+        scanf("%d",&opcion);
+    }
+    return opcion;
+}
+//igual que ia0 excepto que si cartaAnterior=1 no dice -1 y
+//si cartaAnterior =10 no dice +1 int
+
+
+int main()
+{
+    int mejor=0;
+    int partidos, aciertosAcumulados=0;
+    int mazo[40]; //41
+    int o;
+    int siguiente;
+    srand(time(NULL));
+    crearMazo(mazo);
+//para cada partido
+    for(partidos=0; partidos < CANT_PARTIDOS; partidos++)
+    {
+        //printf("Partido %d\n",partidos+1);
+        mezclarMazo(mazo);
+        //verMazo(mazo);
+        int perdio=0;
+        int tope=0;
+        while(!perdio && tope <39)
+        {
+            //muestro carta
+            //printf("Carta = %d\n",mazo[tope]);
+            //solicito opcion
+            o=ia3(mazo[tope]);
+            if(verificar(mazo[tope],mazo[tope+1],o))
+            {
+                tope++;
+                //printf("Aciertos = %d\n",tope);
+//            printf("Aciertos = %d\n",++tope);
+
+            }
+            else
+            {
+                perdio=1;
+                //printf("UPS! la carta siguiente es un %d\n",mazo[tope+1]);
+            }
+        }
+        if(!perdio)
+        {
+            printf("***********************");
+            printf("* UD ES UN CAMPEON!!! *");
+            printf("***********************");
+            aciertosAcumulados=aciertosAcumulados+39;
+        }
+        else
+        {
+           // printf("Ud Acerto %d veces", tope);
+            aciertosAcumulados=aciertosAcumulados+tope;
+        }
+        if(tope>mejor)mejor=tope;
+    }
+    //calcular promedio
+    printf("En promedio acerto %f veces\n",(1.0*aciertosAcumulados)/partidos);
+    printf("El mejor partido fue con %d aciertos",mejor);
+    return 0;
+}

@@ -1,0 +1,4 @@
+rand()  funcion random
+
+rand()%7 genera un numero entre 0 y 7
+

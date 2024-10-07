@@ -1,0 +1,12 @@
+
+vectores
+
+operaciones a nivel de bit
+
+algebra de punteros
+
+memoria dinamica
+
+----palabras claves---
+--quick sort
+--burbujeo
