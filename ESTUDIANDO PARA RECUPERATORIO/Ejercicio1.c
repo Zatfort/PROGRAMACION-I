@@ -6,7 +6,7 @@ int mostrarNotas(int cantidad,int array[]){
     printf("sus notas ingresadas\n");
     for (int i = 0; i<cantidad; i++)
     {
-        printf("%d,",array[i]);
+        printf("%d ",array[i]);
     }
     
     return 0;
