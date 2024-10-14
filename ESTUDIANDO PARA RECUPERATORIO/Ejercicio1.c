@@ -35,19 +35,16 @@ int mostrarNotas(int cantidadNotas,int array[]){
         printf("%d ",array[i]);
     }
 
-
-
     return 0;
 }
 
 int main(){
     int array[50];
     int cantidadNotas;
-     cantidadNotas= cargarNotas(array);
-
-     mostrarNotas(cantidadNotas,array);
-
-
+    
+    cantidadNotas= cargarNotas(array);
+    
+    mostrarNotas(cantidadNotas,array);
 
     return 0;
 }
